@@ -39,8 +39,20 @@ class SampleData {
                 for: schema,
                 configurations: [modelConfiguration],
             )
+            
+            insertSampleData()
+            
+            try context.save()
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
+        }
+    }
+    
+    // MARK: - Private funcs
+    
+    private func insertSampleData() {
+        for friend in Friend.sampleData {
+            context.insert(friend)
         }
     }
 }
