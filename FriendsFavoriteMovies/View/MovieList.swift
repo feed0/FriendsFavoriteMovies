@@ -10,16 +10,41 @@ import SwiftData
 
 struct MovieList: View {
     
+    // MARK: - Properties
+    
     @Environment(\.modelContext) private var context
     
     @Query(sort: \Movie.title) private var movies: [Movie]
     
+    // MARK: - Body
+    
     var body: some View {
-        List {
-            ForEach(movies) { movie in
-                Text(movie.title)
+        NavigationSplitView {
+            List {
+                ForEach(movies) { movie in
+                    NavigationLink(movie.title) {
+                        movieDetailLink(for: movie)
+                    }
+                }
             }
+            .navigationTitle("Movies")
+        } detail: {
+            defaultDetailLink
         }
+    }
+    
+    // MARK: - Subviews
+    
+    private func movieDetailLink(for movie: Movie) -> some View {
+        Text("Detail view for \(movie.title)")
+            .navigationTitle("Movie")
+            .navigationBarTitleDisplayMode(.inline)
+    }
+    
+    private var defaultDetailLink: some View {
+        Text("Select a movie")
+            .navigationTitle("Movie")
+            .navigationBarTitleDisplayMode(.inline)
     }
 }
 
