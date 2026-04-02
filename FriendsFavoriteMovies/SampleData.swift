@@ -17,8 +17,18 @@ class SampleData {
     
     let modelContainer: ModelContainer
     
+    // MARK: Computed properties
+    
     var context: ModelContext {
         modelContainer.mainContext
+    }
+    
+    var friend: Friend {
+        Friend.sampleData.first!
+    }
+    
+    var movie: Movie {
+        Movie.sampleData.first!
     }
     
     // MARK: - Init
