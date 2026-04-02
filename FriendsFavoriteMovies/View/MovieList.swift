@@ -23,7 +23,7 @@ struct MovieList: View {
             List {
                 ForEach(movies) { movie in
                     NavigationLink(movie.title) {
-                        movieDetailLink(for: movie)
+                        movieDetail(for: movie)
                     }
                 }
             }
@@ -35,10 +35,8 @@ struct MovieList: View {
     
     // MARK: - Subviews
     
-    private func movieDetailLink(for movie: Movie) -> some View {
-        Text("Detail view for \(movie.title)")
-            .navigationTitle("Movie")
-            .navigationBarTitleDisplayMode(.inline)
+    private func movieDetail(for movie: Movie) -> some View {
+        MovieDetail(movie: movie)
     }
     
     private var defaultDetailLink: some View {

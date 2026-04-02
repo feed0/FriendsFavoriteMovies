@@ -17,6 +17,8 @@ struct MovieDetail: View {
             movieTextField
             releaseDatePicker
         }
+        .navigationTitle("Movie")
+        .navigationBarTitleDisplayMode(.inline)
     }
     
     // MARK: - Subviews
@@ -38,5 +40,7 @@ struct MovieDetail: View {
 }
 
 #Preview {
-    MovieDetail(movie: SampleData.shared.movie)
+    NavigationStack {
+        MovieDetail(movie: SampleData.shared.movie)
+    }
 }

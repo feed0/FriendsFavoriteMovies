@@ -23,7 +23,7 @@ struct FriendList: View {
             List {
                 ForEach(friends) { friend in
                     NavigationLink(friend.name) {
-                        friendDetailLink(for: friend)
+                        friendDetail(for: friend)
                     }
                 }
             }
@@ -35,10 +35,8 @@ struct FriendList: View {
     
     // MARK: - Subviews
     
-    private func friendDetailLink(for friend: Friend) -> some View {
-        Text("Detail view for \(friend.name)")
-            .navigationTitle("Friend")
-            .navigationBarTitleDisplayMode(.inline)
+    private func friendDetail(for friend: Friend) -> some View {
+        FriendDetail(friend: friend)
     }
     
     private var defaultDetailLink: some View {

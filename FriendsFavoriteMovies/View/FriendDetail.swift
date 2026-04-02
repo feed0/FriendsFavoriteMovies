@@ -16,6 +16,9 @@ struct FriendDetail: View {
         Form {
             friendTextField
         }
+        .navigationTitle("Friend")
+        .navigationBarTitleDisplayMode(.inline)
+        
     }
     
     // MARK: - Subviews
@@ -30,5 +33,7 @@ struct FriendDetail: View {
 }
 
 #Preview {
-    FriendDetail(friend: SampleData.shared.friend)
+    NavigationStack {
+        FriendDetail(friend: SampleData.shared.friend)
+    }
 }
