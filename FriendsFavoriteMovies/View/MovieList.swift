@@ -28,6 +28,11 @@ struct MovieList: View {
                 }
             }
             .navigationTitle("Movies")
+            .toolbar {
+                ToolbarItem {
+                    addMovieButton
+                }
+            }
         } detail: {
             defaultDetailLink
         }
@@ -39,10 +44,25 @@ struct MovieList: View {
         MovieDetail(movie: movie)
     }
     
+    private var addMovieButton: some View {
+        Button(
+            "Add movie",
+            systemImage: "plus",
+            action: addMovie
+        )
+    }
+    
     private var defaultDetailLink: some View {
         Text("Select a movie")
             .navigationTitle("Movie")
             .navigationBarTitleDisplayMode(.inline)
+    }
+    
+    // MARK: - Private funcs
+    
+    private func addMovie() {
+        let newMovie = Movie(title: "New movie", releaseDate: .now)
+        context.insert(newMovie)
     }
 }
 

@@ -28,6 +28,11 @@ struct FriendList: View {
                 }
             }
             .navigationTitle("Friends")
+            .toolbar {
+                ToolbarItem {
+                    addFriendButton
+                }
+            }
         } detail: {
             defaultDetailLink
         }
@@ -39,10 +44,25 @@ struct FriendList: View {
         FriendDetail(friend: friend)
     }
     
+    private var addFriendButton: some View {
+        Button(
+            "Add friend",
+            systemImage: "plus",
+            action: addFriend
+        )
+    }
+    
     private var defaultDetailLink: some View {
         Text("Select a friend")
             .navigationTitle("Friend")
             .navigationBarTitleDisplayMode(.inline)
+    }
+    
+    // MARK: - Private funcs
+    
+    private func addFriend() {
+        let newFriend = Friend(name: "New friend")
+        context.insert(newFriend)
     }
 }
 
