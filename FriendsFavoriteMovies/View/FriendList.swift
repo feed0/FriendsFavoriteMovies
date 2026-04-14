@@ -10,13 +10,15 @@ import SwiftData
 
 struct FriendList: View {
     
-    // MARK: - Subviews
+    // MARK: - Properties
     
     @Query(sort: \Friend.name) private var friends: [Friend]
     
     @Environment(\.modelContext) private var context
     
-    // MARK: - Subviews
+    @State private var newFriend: Friend?
+
+    // MARK: - Body
     
     var body: some View {
         NavigationSplitView {
@@ -35,6 +37,11 @@ struct FriendList: View {
                 }
                 ToolbarItem {
                     EditButton()
+                }
+            }
+            .sheet(item: $newFriend) { friend in
+                NavigationStack {
+                    FriendDetail(friend: friend)
                 }
             }
         } detail: {
@@ -65,8 +72,9 @@ struct FriendList: View {
     // MARK: - Private funcs
     
     private func addFriend() {
-        let newFriend = Friend(name: "New friend")
+        let newFriend = Friend(name: "")
         context.insert(newFriend)
+        self.newFriend = newFriend
     }
     
     private func deleteFriends(indexes: IndexSet) {

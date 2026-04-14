@@ -16,6 +16,8 @@ struct MovieList: View {
     
     @Query(sort: \Movie.title) private var movies: [Movie]
     
+    @State private var newMovie: Movie?
+    
     // MARK: - Body
     
     var body: some View {
@@ -35,6 +37,11 @@ struct MovieList: View {
                 }
                 ToolbarItem {
                     EditButton()
+                }
+            }
+            .sheet(item: $newMovie) { movie in
+                NavigationStack {
+                    MovieDetail(movie: movie)
                 }
             }
         } detail: {
@@ -65,8 +72,9 @@ struct MovieList: View {
     // MARK: - Private funcs
     
     private func addMovie() {
-        let newMovie = Movie(title: "New movie", releaseDate: .now)
+        let newMovie = Movie(title: "", releaseDate: .now)
         context.insert(newMovie)
+        self.newMovie = newMovie
     }
     
     private func deleteMovies(indexes: IndexSet) {
