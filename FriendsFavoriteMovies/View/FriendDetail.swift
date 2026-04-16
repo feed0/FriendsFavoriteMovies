@@ -6,9 +6,13 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct FriendDetail: View {
     @Bindable var friend: Friend
+    
+    @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var context
     
     // MARK: - Body
     
@@ -18,7 +22,14 @@ struct FriendDetail: View {
         }
         .navigationTitle("Friend")
         .navigationBarTitleDisplayMode(.inline)
-        
+        .toolbar {
+            ToolbarItem(placement: .confirmationAction) {
+                saveButton
+            }
+            ToolbarItem(placement: .cancellationAction) {
+                cancelButton
+            }
+        }
     }
     
     // MARK: - Subviews
@@ -29,6 +40,29 @@ struct FriendDetail: View {
             text: $friend.name
         )
         .autocorrectionDisabled()
+    }
+    
+    private var saveButton: some View {
+        Button("Save") {
+            handleSaveButton()
+        }
+    }
+    
+    private var cancelButton: some View {
+        Button("Cancel") {
+            handleCancelButton()
+        }
+    }
+    
+    // MARK: - Private funcs
+    
+    private func handleSaveButton() {
+        dismiss()
+    }
+    
+    private func handleCancelButton() {
+        context.delete(friend)
+        dismiss()
     }
 }
 

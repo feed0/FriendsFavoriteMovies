@@ -6,9 +6,13 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct MovieDetail: View {
     @Bindable var movie: Movie
+    
+    @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var context
     
     // MARK: - Body
     
@@ -19,6 +23,15 @@ struct MovieDetail: View {
         }
         .navigationTitle("Movie")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .confirmationAction) {
+                saveButton
+            }
+            
+            ToolbarItem(placement: .cancellationAction) {
+                cancelButton
+            }
+        }
     }
     
     // MARK: - Subviews
@@ -36,6 +49,29 @@ struct MovieDetail: View {
             selection: $movie.releaseDate,
             displayedComponents: .date
         )
+    }
+    
+    private var saveButton: some View {
+        Button("Save") {
+            handleSaveButton()
+        }
+    }
+    
+    private var cancelButton: some View {
+        Button("Cancel") {
+            handleCancelButton()
+        }
+    }
+    
+    // MARK: - Private funcs
+    
+    private func handleSaveButton() {
+        dismiss()
+    }
+    
+    private func handleCancelButton() {
+        context.delete(movie)
+        dismiss()
     }
 }
 
