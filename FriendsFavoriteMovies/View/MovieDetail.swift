@@ -9,10 +9,27 @@ import SwiftUI
 import SwiftData
 
 struct MovieDetail: View {
+    
+    // MARK: - Properties
+    
     @Bindable var movie: Movie
+    let isNew: Bool
     
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
+    
+    // MARK: Computed properties
+    
+    private var navigationTitle: String {
+        isNew ? "New Movie" : "Movie"
+    }
+    
+    // MARK: - Init
+    
+    init(movie: Movie, isNew: Bool = false) {
+        self.movie = movie
+        self.isNew = isNew
+    }
     
     // MARK: - Body
     
@@ -21,15 +38,17 @@ struct MovieDetail: View {
             movieTextField
             releaseDatePicker
         }
-        .navigationTitle("Movie")
+        .navigationTitle(navigationTitle)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .confirmationAction) {
-                saveButton
-            }
-            
-            ToolbarItem(placement: .cancellationAction) {
-                cancelButton
+            if isNew {
+                ToolbarItem(placement: .confirmationAction) {
+                    saveButton
+                }
+                
+                ToolbarItem(placement: .cancellationAction) {
+                    cancelButton
+                }
             }
         }
     }
@@ -77,6 +96,17 @@ struct MovieDetail: View {
 
 #Preview {
     NavigationStack {
-        MovieDetail(movie: SampleData.shared.movie)
+        MovieDetail(
+            movie: SampleData.shared.movie
+        )
+    }
+}
+
+#Preview("New Movie") {
+    NavigationStack {
+        MovieDetail(
+            movie: SampleData.shared.movie,
+            isNew: true
+        )
     }
 }

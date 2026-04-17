@@ -9,10 +9,31 @@ import SwiftUI
 import SwiftData
 
 struct FriendDetail: View {
+    
+    // MARK: - Properties
+    
     @Bindable var friend: Friend
+    
+    private let isNew: Bool
     
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
+    
+    // MARK: Computed properties
+    
+    private var navigationTitle: String {
+        isNew ? "New Friend" : "Friend"
+    }
+    
+    // MARK: - Init
+    
+    init(
+        friend: Friend,
+        isNew: Bool = false
+    ) {
+        self.friend = friend
+        self.isNew = isNew
+    }
     
     // MARK: - Body
     
@@ -20,14 +41,16 @@ struct FriendDetail: View {
         Form {
             friendTextField
         }
-        .navigationTitle("Friend")
+        .navigationTitle(navigationTitle)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .confirmationAction) {
-                saveButton
-            }
-            ToolbarItem(placement: .cancellationAction) {
-                cancelButton
+            if isNew {
+                ToolbarItem(placement: .confirmationAction) {
+                    saveButton
+                }
+                ToolbarItem(placement: .cancellationAction) {
+                    cancelButton
+                }
             }
         }
     }
@@ -66,8 +89,21 @@ struct FriendDetail: View {
     }
 }
 
+// MARK: - Previews
+
 #Preview {
     NavigationStack {
-        FriendDetail(friend: SampleData.shared.friend)
+        FriendDetail(
+            friend: SampleData.shared.friend
+        )
+    }
+}
+
+#Preview("New Friend") {
+    NavigationStack {
+        FriendDetail(
+            friend: SampleData.shared.friend,
+            isNew: true
+        )
     }
 }

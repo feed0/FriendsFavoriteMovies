@@ -41,8 +41,9 @@ struct MovieList: View {
             }
             .sheet(item: $newMovie) { movie in
                 NavigationStack {
-                    MovieDetail(movie: movie)
+                    newMovieDetail(for: movie)
                 }
+                .interactiveDismissDisabled()
             }
         } detail: {
             defaultDetailLink
@@ -53,6 +54,13 @@ struct MovieList: View {
     
     private func movieDetail(for movie: Movie) -> some View {
         MovieDetail(movie: movie)
+    }
+    
+    private func newMovieDetail(for movie: Movie) -> some View {
+        MovieDetail(
+            movie: movie,
+            isNew: true
+        )
     }
     
     private var addMovieButton: some View {

@@ -41,8 +41,9 @@ struct FriendList: View {
             }
             .sheet(item: $newFriend) { friend in
                 NavigationStack {
-                    FriendDetail(friend: friend)
+                    newFriendDetail(for: friend)
                 }
+                .interactiveDismissDisabled()
             }
         } detail: {
             defaultDetailLink
@@ -53,6 +54,13 @@ struct FriendList: View {
     
     private func friendDetail(for friend: Friend) -> some View {
         FriendDetail(friend: friend)
+    }
+    
+    private func newFriendDetail(for friend: Friend) -> some View {
+        FriendDetail(
+            friend: friend,
+            isNew: true
+        )
     }
     
     private var addFriendButton: some View {
