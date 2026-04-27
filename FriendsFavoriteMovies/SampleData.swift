@@ -61,12 +61,20 @@ class SampleData {
     // MARK: - Private funcs
     
     private func insertSampleData() {
+        /// Friends
         for friend in Friend.sampleData {
             context.insert(friend)
         }
         
+        /// Movies
         for movie in Movie.sampleData {
             context.insert(movie)
         }
+        
+        /// Many-friends to One-movie
+        Friend.sampleData[0].favoriteMovie = Movie.sampleData[1]
+        Friend.sampleData[2].favoriteMovie = Movie.sampleData[0]
+        Friend.sampleData[3].favoriteMovie = Movie.sampleData[4]
+        Friend.sampleData[4].favoriteMovie = Movie.sampleData[0]
     }
 }

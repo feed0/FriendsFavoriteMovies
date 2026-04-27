@@ -30,6 +30,7 @@ class Movie {
     
     var title: String
     var releaseDate: Date
+    var favoritedBy = [Friend]()
     
     // MARK: - Init
     

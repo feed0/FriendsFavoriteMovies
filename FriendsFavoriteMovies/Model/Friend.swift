@@ -22,6 +22,7 @@ class Friend {
     ]
     
     var name: String
+    var favoriteMovie: Movie?
     
     // MARK: - Init
     
