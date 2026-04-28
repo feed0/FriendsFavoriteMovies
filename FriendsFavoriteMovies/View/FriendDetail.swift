@@ -19,6 +19,8 @@ struct FriendDetail: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
     
+    @Query(sort: \Movie.title) private var movies: [Movie]
+    
     // MARK: Computed properties
     
     private var navigationTitle: String {
@@ -40,6 +42,7 @@ struct FriendDetail: View {
     var body: some View {
         Form {
             friendTextField
+            friendFavoriteMoviePicker
         }
         .navigationTitle(navigationTitle)
         .navigationBarTitleDisplayMode(.inline)
@@ -63,6 +66,23 @@ struct FriendDetail: View {
             text: $friend.name
         )
         .autocorrectionDisabled()
+    }
+    
+    private var friendFavoriteMoviePicker: some View {
+        Picker(
+            "Favorite Movie",
+            selection: $friend.favoriteMovie,
+        ) {
+            /// No favorite movie
+            Text("None")
+                .tag(nil as Movie?)
+            
+            /// Movies list
+            ForEach(movies) { movie in
+                Text(movie.title)
+                    .tag(movie)
+            }
+        }
     }
     
     private var saveButton: some View {
@@ -97,6 +117,7 @@ struct FriendDetail: View {
             friend: SampleData.shared.friend
         )
     }
+    .modelContainer(SampleData.shared.modelContainer)
 }
 
 #Preview("New Friend") {
@@ -106,4 +127,5 @@ struct FriendDetail: View {
             isNew: true
         )
     }
+    .modelContainer(SampleData.shared.modelContainer)
 }
