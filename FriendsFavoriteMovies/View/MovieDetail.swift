@@ -24,9 +24,22 @@ struct MovieDetail: View {
         isNew ? "New Movie" : "Movie"
     }
     
+    private var showFavoritedBySection: Bool {
+        !movie.favoritedBy.isEmpty
+    }
+    
+    private var sortedFriends: [Friend] {
+        movie.favoritedBy.sorted { first, second in
+            first.name < second.name
+        }
+    }
+    
     // MARK: - Init
     
-    init(movie: Movie, isNew: Bool = false) {
+    init(
+        movie: Movie,
+        isNew: Bool = false,
+    ) {
         self.movie = movie
         self.isNew = isNew
     }
@@ -37,6 +50,14 @@ struct MovieDetail: View {
         Form {
             movieTextField
             releaseDatePicker
+            
+            if showFavoritedBySection {
+                Section("Favorited by") {
+                    ForEach(sortedFriends) { friend in
+                        friendNameText(for: friend)
+                    }
+                }
+            }
         }
         .navigationTitle(navigationTitle)
         .navigationBarTitleDisplayMode(.inline)
@@ -82,6 +103,10 @@ struct MovieDetail: View {
         }
     }
     
+    private func friendNameText(for friend: Friend) -> some View {
+        Text(friend.name)
+    }
+    
     // MARK: - Private funcs
     
     private func handleSaveButton() {
@@ -103,9 +128,14 @@ struct MovieDetail: View {
 }
 
 #Preview("New Movie") {
+    let newMovie = Movie(
+        title: "",
+        releaseDate: Date.now,
+    )
+    
     NavigationStack {
         MovieDetail(
-            movie: SampleData.shared.movie,
+            movie: newMovie,
             isNew: true
         )
     }
