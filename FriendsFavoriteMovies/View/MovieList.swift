@@ -2,7 +2,7 @@
 //  MovieList.swift
 //  FriendsFavoriteMovies
 //
-//  Created by Felipe Campelo on 25/03/26.
+//  Created by feed0 on 25/03/26.
 //
 
 import SwiftUI
@@ -27,7 +27,7 @@ struct MovieList: View {
             titleFilter.isEmpty
             || movie.title.localizedStandardContains(titleFilter)
         }
-
+        
         _movies = Query(
             filter: predicate,
             sort: \Movie.title,
@@ -37,32 +37,28 @@ struct MovieList: View {
     // MARK: - Body
     
     var body: some View {
-        NavigationSplitView {
-            List {
-                ForEach(movies) { movie in
-                    NavigationLink(movie.title) {
-                        movieDetail(for: movie)
-                    }
-                }
-                .onDelete(perform: deleteMovies(indexes:))
-            }
-            .navigationTitle("Movies")
-            .toolbar {
-                ToolbarItem {
-                    addMovieButton
-                }
-                ToolbarItem {
-                    EditButton()
+        List {
+            ForEach(movies) { movie in
+                NavigationLink(movie.title) {
+                    movieDetail(for: movie)
                 }
             }
-            .sheet(item: $newMovie) { movie in
-                NavigationStack {
-                    newMovieDetail(for: movie)
-                }
-                .interactiveDismissDisabled()
+            .onDelete(perform: deleteMovies(indexes:))
+        }
+        .navigationTitle("Movies")
+        .toolbar {
+            ToolbarItem {
+                addMovieButton
             }
-        } detail: {
-            defaultDetailLink
+            ToolbarItem {
+                EditButton()
+            }
+        }
+        .sheet(item: $newMovie) { movie in
+            NavigationStack {
+                newMovieDetail(for: movie)
+            }
+            .interactiveDismissDisabled()
         }
     }
     
@@ -87,12 +83,6 @@ struct MovieList: View {
         )
     }
     
-    private var defaultDetailLink: some View {
-        Text("Select a movie")
-            .navigationTitle("Movie")
-            .navigationBarTitleDisplayMode(.inline)
-    }
-    
     // MARK: - Private funcs
     
     private func addMovie() {
@@ -109,11 +99,15 @@ struct MovieList: View {
 }
 
 #Preview {
-    MovieList()
-        .modelContainer(SampleData.shared.modelContainer)
+    NavigationStack {
+        MovieList()
+            .modelContainer(SampleData.shared.modelContainer)
+    }
 }
 
 #Preview("Filtered") {
-    MovieList(titleFilter: "tr")
-        .modelContainer(SampleData.shared.modelContainer)
+    NavigationStack {
+        MovieList(titleFilter: "tr")
+            .modelContainer(SampleData.shared.modelContainer)
+    }
 }
