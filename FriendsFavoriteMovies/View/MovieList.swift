@@ -37,13 +37,19 @@ struct MovieList: View {
     // MARK: - Body
     
     var body: some View {
-        List {
-            ForEach(movies) { movie in
-                NavigationLink(movie.title) {
-                    movieDetail(for: movie)
+        Group {
+            if !movies.isEmpty {
+                List {
+                    ForEach(movies) { movie in
+                        NavigationLink(movie.title) {
+                            movieDetail(for: movie)
+                        }
+                    }
+                    .onDelete(perform: deleteMovies(indexes:))
                 }
+            } else {
+                contentUnavailableView
             }
-            .onDelete(perform: deleteMovies(indexes:))
         }
         .navigationTitle("Movies")
         .toolbar {
@@ -51,7 +57,7 @@ struct MovieList: View {
                 addMovieButton
             }
             ToolbarItem {
-                EditButton()
+                editButton
             }
         }
         .sheet(item: $newMovie) { movie in
@@ -64,6 +70,22 @@ struct MovieList: View {
     
     // MARK: - Subviews
     
+    // MARK: toolbar
+    
+    private var addMovieButton: some View {
+        Button(
+            "Add movie",
+            systemImage: "plus",
+            action: addMovie
+        )
+    }
+    
+    private var editButton: some View {
+        EditButton()
+    }
+    
+    // MARK: sheets
+    
     private func movieDetail(for movie: Movie) -> some View {
         MovieDetail(movie: movie)
     }
@@ -75,11 +97,12 @@ struct MovieList: View {
         )
     }
     
-    private var addMovieButton: some View {
-        Button(
-            "Add movie",
-            systemImage: "plus",
-            action: addMovie
+    // MARK: other
+    
+    private var contentUnavailableView: some View {
+        ContentUnavailableView(
+            "Add Friends",
+            systemImage: "person.and.person",
         )
     }
     
@@ -109,5 +132,15 @@ struct MovieList: View {
     NavigationStack {
         MovieList(titleFilter: "tr")
             .modelContainer(SampleData.shared.modelContainer)
+    }
+}
+
+#Preview("Empty movie list") {
+    NavigationStack {
+        MovieList()
+            .modelContainer(
+                for: Movie.self,
+                inMemory: true,
+            )
     }
 }

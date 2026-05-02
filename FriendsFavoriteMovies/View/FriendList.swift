@@ -17,18 +17,24 @@ struct FriendList: View {
     @Environment(\.modelContext) private var context
     
     @State private var newFriend: Friend?
-
+    
     // MARK: - Body
     
     var body: some View {
         NavigationSplitView {
-            List {
-                ForEach(friends) { friend in
-                    NavigationLink(friend.name) {
-                        friendDetail(for: friend)
+            Group {
+                if !friends.isEmpty {
+                    List {
+                        ForEach(friends) { friend in
+                            NavigationLink(friend.name) {
+                                friendDetail(for: friend)
+                            }
+                        }
+                        .onDelete(perform: deleteFriends(indexes:))
                     }
+                } else {
+                    contentUnavailableView
                 }
-                .onDelete(perform: deleteFriends(indexes:))
             }
             .navigationTitle("Friends")
             .toolbar {
@@ -36,7 +42,7 @@ struct FriendList: View {
                     addFriendButton
                 }
                 ToolbarItem {
-                    EditButton()
+                    editButton
                 }
             }
             .sheet(item: $newFriend) { friend in
@@ -52,6 +58,22 @@ struct FriendList: View {
     
     // MARK: - Subviews
     
+    // MARK: toolbar
+    
+    private var addFriendButton: some View {
+        Button(
+            "Add friend",
+            systemImage: "plus",
+            action: addFriend
+        )
+    }
+    
+    private var editButton: some View {
+        EditButton()
+    }
+    
+    // MARK: sheets
+    
     private func friendDetail(for friend: Friend) -> some View {
         FriendDetail(friend: friend)
     }
@@ -63,18 +85,19 @@ struct FriendList: View {
         )
     }
     
-    private var addFriendButton: some View {
-        Button(
-            "Add friend",
-            systemImage: "plus",
-            action: addFriend
-        )
-    }
+    // MARK: other
     
     private var defaultDetailLink: some View {
         Text("Select a friend")
             .navigationTitle("Friend")
             .navigationBarTitleDisplayMode(.inline)
+    }
+    
+    private var contentUnavailableView: some View {
+        ContentUnavailableView(
+            "Add Friends",
+            systemImage: "person.and.person",
+        )
     }
     
     // MARK: - Private funcs
@@ -92,7 +115,17 @@ struct FriendList: View {
     }
 }
 
+// MARK: - Previews
+
 #Preview {
     FriendList()
         .modelContainer(SampleData.shared.modelContainer)
+}
+
+#Preview("Empty friend list") {
+    FriendList()
+        .modelContainer(
+            for: Friend.self,
+            inMemory: true,
+        )
 }
