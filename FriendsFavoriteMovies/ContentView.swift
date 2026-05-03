@@ -12,7 +12,7 @@ struct ContentView: View {
     var body: some View {
         TabView {
             Tab("Friends", systemImage: "person.and.person") {
-                FriendList()
+                FilteredFriendList()
             }
             
             Tab("Movies", systemImage: "film.stack") {

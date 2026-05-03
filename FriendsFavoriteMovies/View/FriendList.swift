@@ -18,41 +18,53 @@ struct FriendList: View {
     
     @State private var newFriend: Friend?
     
+    // MARK: - Init
+    
+    init(
+        nameFilter: String = ""
+    ) {
+        let predicate = #Predicate<Friend> { friend in
+            nameFilter.isEmpty
+            || friend.name.localizedStandardContains(nameFilter)
+        }
+        
+        _friends = Query(
+            filter: predicate,
+            sort: \Friend.name,
+        )
+    }
+    
     // MARK: - Body
     
     var body: some View {
-        NavigationSplitView {
-            Group {
-                if !friends.isEmpty {
-                    List {
-                        ForEach(friends) { friend in
-                            NavigationLink(friend.name) {
-                                friendDetail(for: friend)
-                            }
+        Group {
+            if !friends.isEmpty {
+                List {
+                    ForEach(friends) { friend in
+                        NavigationLink(friend.name) {
+                            friendDetail(for: friend)
                         }
-                        .onDelete(perform: deleteFriends(indexes:))
                     }
-                } else {
-                    contentUnavailableView
+                    .onDelete(perform: deleteFriends(indexes:))
                 }
+            } else {
+                contentUnavailableView
             }
-            .navigationTitle("Friends")
-            .toolbar {
-                ToolbarItem {
-                    addFriendButton
-                }
-                ToolbarItem {
-                    editButton
-                }
+        }
+        .navigationTitle("Friends")
+        .toolbar {
+            ToolbarItem {
+                addFriendButton
             }
-            .sheet(item: $newFriend) { friend in
-                NavigationStack {
-                    newFriendDetail(for: friend)
-                }
-                .interactiveDismissDisabled()
+            ToolbarItem {
+                editButton
             }
-        } detail: {
-            defaultDetailLink
+        }
+        .sheet(item: $newFriend) { friend in
+            NavigationStack {
+                newFriendDetail(for: friend)
+            }
+            .interactiveDismissDisabled()
         }
     }
     
@@ -86,13 +98,7 @@ struct FriendList: View {
     }
     
     // MARK: other
-    
-    private var defaultDetailLink: some View {
-        Text("Select a friend")
-            .navigationTitle("Friend")
-            .navigationBarTitleDisplayMode(.inline)
-    }
-    
+        
     private var contentUnavailableView: some View {
         ContentUnavailableView(
             "Add Friends",
@@ -118,14 +124,27 @@ struct FriendList: View {
 // MARK: - Previews
 
 #Preview {
-    FriendList()
+    NavigationStack {
+        FriendList()
+            .modelContainer(SampleData.shared.modelContainer)
+    }
+}
+
+#Preview("Filtered") {
+    NavigationStack {
+        FriendList(
+            nameFilter: "a",
+        )
         .modelContainer(SampleData.shared.modelContainer)
+    }
 }
 
 #Preview("Empty friend list") {
-    FriendList()
-        .modelContainer(
-            for: Friend.self,
-            inMemory: true,
-        )
+    NavigationStack {
+        FriendList()
+            .modelContainer(
+                for: Friend.self,
+                inMemory: true,
+            )
+    }
 }

@@ -1,14 +1,14 @@
 //
-//  FilteredMovieList.swift
+//  FilteredFriendList.swift
 //  FriendsFavoriteMovies
 //
-//  Created by feed0 on 01/05/26.
+//  Created by Felipe Eduardo Campelo Ferreira Osorio on 03/05/26.
 //
 
 import SwiftUI
 import SwiftData
 
-struct FilteredMovieList: View {
+struct FilteredFriendList: View {
     
     // MARK: - Properties
     
@@ -18,7 +18,7 @@ struct FilteredMovieList: View {
     
     var body: some View {
         NavigationSplitView {
-            searchableMovieList
+            searchableFriendList
         } detail: {
             defaultDetailLink
         }
@@ -26,16 +26,16 @@ struct FilteredMovieList: View {
     
     // MARK: - Subviews
     
-    private var searchableMovieList: some View {
-        MovieList(
-            titleFilter: searchString,
+    private var searchableFriendList: some View {
+        FriendList(
+            nameFilter: searchString
         )
         .searchable(text: $searchString)
     }
     
     private var defaultDetailLink: some View {
-        Text("Select a movie")
-            .navigationTitle("Movie")
+        Text("Select a friend")
+            .navigationTitle("Friend")
             .navigationBarTitleDisplayMode(.inline)
     }
 }
@@ -43,6 +43,6 @@ struct FilteredMovieList: View {
 // MARK: - Previews
 
 #Preview {
-    FilteredMovieList()
+    FilteredFriendList()
         .modelContainer(SampleData.shared.modelContainer)
 }
