@@ -83,6 +83,7 @@ struct FriendDetail: View {
                     .tag(movie)
             }
         }
+        .pickerStyle(.menu)
     }
     
     private var saveButton: some View {
