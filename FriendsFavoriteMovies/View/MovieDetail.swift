@@ -53,8 +53,11 @@ struct MovieDetail: View {
             
             if showFavoritedBySection {
                 Section("Favorited by") {
-                    ForEach(sortedFriends) { friend in
-                        friendNameText(for: friend)
+                    List {
+                        ForEach(sortedFriends) { friend in
+                            friendNameText(for: friend)
+                        }
+                        .onDelete(perform: deleteRelationship(indexes:))
                     }
                 }
             }
@@ -109,6 +112,8 @@ struct MovieDetail: View {
     
     // MARK: - Private funcs
     
+    // MARK: toolbar
+    
     private func handleSaveButton() {
         dismiss()
     }
@@ -116,6 +121,14 @@ struct MovieDetail: View {
     private func handleCancelButton() {
         context.delete(movie)
         dismiss()
+    }
+    
+    // MARK: other
+    
+    private func deleteRelationship(indexes: IndexSet) {
+        for index in indexes {
+            movie.favoritedBy.remove(at: index)
+        }
     }
 }
 
