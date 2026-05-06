@@ -22,6 +22,7 @@ struct MovieList: View {
     
     init(
         titleFilter: String = "",
+        sortBy: SortDescriptor<Movie> = SortDescriptor<Movie>(\Movie.title)
     ) {
         let predicate = #Predicate<Movie> { movie in
             titleFilter.isEmpty
@@ -30,7 +31,7 @@ struct MovieList: View {
         
         _movies = Query(
             filter: predicate,
-            sort: \Movie.title,
+            sort: [sortBy]
         )
     }
     
@@ -101,8 +102,8 @@ struct MovieList: View {
     
     private var contentUnavailableView: some View {
         ContentUnavailableView(
-            "Add Friends",
-            systemImage: "person.and.person",
+            "Add Movies",
+            systemImage: "film.stack",
         )
     }
     
@@ -121,6 +122,8 @@ struct MovieList: View {
     }
 }
 
+// MARK: - Previews
+
 #Preview {
     NavigationStack {
         MovieList()
@@ -128,7 +131,19 @@ struct MovieList: View {
     }
 }
 
-#Preview("Filtered") {
+#Preview("Sorted by release date") {
+    let sortDescriptor = SortDescriptor<Movie>(
+        \Movie.releaseDate,
+         order: .reverse,
+    )
+    
+    NavigationStack {
+        MovieList(sortBy: sortDescriptor)
+            .modelContainer(SampleData.shared.modelContainer)
+    }
+}
+
+#Preview("Filtered by text") {
     NavigationStack {
         MovieList(titleFilter: "tr")
             .modelContainer(SampleData.shared.modelContainer)
