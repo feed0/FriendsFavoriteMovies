@@ -23,20 +23,13 @@ class SampleData {
         modelContainer.mainContext
     }
     
-    var friend: Friend {
-        Friend.sampleData.first!
-    }
-    
-    var movie: Movie {
-        Movie.sampleData.first!
-    }
-    
     // MARK: - Init
     
     private init() {
         let schema = Schema([
             Friend.self,
             Movie.self,
+            CastOrCrewMember.self,
         ])
         
         let modelConfiguration = ModelConfiguration(
@@ -70,6 +63,17 @@ class SampleData {
         for movie in Movie.sampleData {
             context.insert(movie)
         }
+        
+        /// Cast & Crew
+        for member in CastOrCrewMember.sampleData {
+            context.insert(member)
+        }
+        
+        /// Link cast-&-crew to movies
+        Movie.sampleData[0].castAndCrew.append(CastOrCrewMember.sampleData[0])
+        Movie.sampleData[0].castAndCrew.append(CastOrCrewMember.sampleData[1])
+        CastOrCrewMember.sampleData[0].movies.append(Movie.sampleData[0])
+        CastOrCrewMember.sampleData[1].movies.append(Movie.sampleData[0])
         
         /// Many-friends to One-movie
         Friend.sampleData[0].favoriteMovie = Movie.sampleData[1]
