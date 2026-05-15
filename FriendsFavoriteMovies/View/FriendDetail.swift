@@ -115,7 +115,7 @@ struct FriendDetail: View {
 #Preview {
     NavigationStack {
         FriendDetail(
-            friend: SampleData.shared.friend
+            friend: Friend.sampleData[0]
         )
     }
     .modelContainer(SampleData.shared.modelContainer)
@@ -124,7 +124,7 @@ struct FriendDetail: View {
 #Preview("New Friend") {
     NavigationStack {
         FriendDetail(
-            friend: SampleData.shared.friend,
+            friend: Friend.sampleData[0],
             isNew: true
         )
     }
