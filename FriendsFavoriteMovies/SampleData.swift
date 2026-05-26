@@ -73,6 +73,8 @@ class SampleData {
         Movie.sampleData[0].castAndCrew.append(CastOrCrewMember.sampleData[0])
         Movie.sampleData[0].castAndCrew.append(CastOrCrewMember.sampleData[1])
         CastOrCrewMember.sampleData[0].movies.append(Movie.sampleData[0])
+        CastOrCrewMember.sampleData[0].movies.append(Movie.sampleData[1])
+        CastOrCrewMember.sampleData[0].movies.append(Movie.sampleData[2])
         CastOrCrewMember.sampleData[1].movies.append(Movie.sampleData[0])
         
         /// Many-friends to One-movie

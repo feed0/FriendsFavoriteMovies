@@ -43,5 +43,9 @@ extension CastOrCrewMember {
             name: "Bob Director",
             role: "Director"
         ),
+        CastOrCrewMember(
+            name: "Junior",
+            role: "FX3 enthusiast"
+        ),
     ]
 }
