@@ -11,12 +11,25 @@ import SwiftData
 struct ContentView: View {
     var body: some View {
         TabView {
-            Tab("Friends", systemImage: "person.and.person") {
+            Tab(
+                "Friends",
+                systemImage: "person.and.person"
+            ) {
                 FilteredFriendList()
             }
             
-            Tab("Movies", systemImage: "film.stack") {
+            Tab(
+                "Movies",
+                systemImage: "film.stack"
+            ) {
                 FilteredMovieList()
+            }
+            
+            Tab(
+                "Cast",
+                systemImage: "person.3.fill"
+            ) {
+                FilteredCastOrCrewMemberList()
             }
         }
     }
