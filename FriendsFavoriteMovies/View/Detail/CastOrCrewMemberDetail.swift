@@ -28,7 +28,6 @@ struct CastOrCrewMemberDetail: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
     
-    @Query(sort: \CastOrCrewMember.name) private var movies: [CastOrCrewMember]
     @State private var showMoviePicker: Bool = false
     
     // MARK: Computed properties
@@ -102,10 +101,6 @@ struct CastOrCrewMemberDetail: View {
                 castOrCrewMember.movies.append(movie)
             }
             
-            if shouldAppendMember(movie) {
-                movie.castAndCrew.append(castOrCrewMember)
-            }
-            
             showMoviePicker = false
         }
     }
@@ -156,10 +151,6 @@ struct CastOrCrewMemberDetail: View {
     
     private func shouldAppendMovie(_ movie: Movie) -> Bool {
         !castOrCrewMember.movies.contains(where: { $0 === movie })
-    }
-    
-    private func shouldAppendMember(_ movie: Movie) -> Bool {
-        !movie.castAndCrew.contains(where: { $0 === castOrCrewMember })
     }
 }
 

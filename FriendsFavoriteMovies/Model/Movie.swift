@@ -29,6 +29,8 @@ class Movie {
     // MARK: Relationship properties
     
     var favoritedBy = [Friend]()
+    
+    @Relationship(inverse: \CastOrCrewMember.movies)
     var castAndCrew = [CastOrCrewMember]()
 }
 

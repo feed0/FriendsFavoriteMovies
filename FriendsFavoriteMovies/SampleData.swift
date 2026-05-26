@@ -72,10 +72,8 @@ class SampleData {
         /// Link cast-&-crew to movies
         Movie.sampleData[0].castAndCrew.append(CastOrCrewMember.sampleData[0])
         Movie.sampleData[0].castAndCrew.append(CastOrCrewMember.sampleData[1])
-        CastOrCrewMember.sampleData[0].movies.append(Movie.sampleData[0])
-        CastOrCrewMember.sampleData[0].movies.append(Movie.sampleData[1])
-        CastOrCrewMember.sampleData[0].movies.append(Movie.sampleData[2])
-        CastOrCrewMember.sampleData[1].movies.append(Movie.sampleData[0])
+        Movie.sampleData[1].castAndCrew.append(CastOrCrewMember.sampleData[0])
+        Movie.sampleData[2].castAndCrew.append(CastOrCrewMember.sampleData[0])
         
         /// Many-friends to One-movie
         Friend.sampleData[0].favoriteMovie = Movie.sampleData[1]

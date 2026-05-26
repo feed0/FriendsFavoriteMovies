@@ -34,6 +34,8 @@ struct MoviesParticipatedInList: View {
         }
     }
     
+    // MARK: - Functions
+    
     private func deleteMoviesCrewRelationship(indexes: IndexSet) {
         for index in indexes {
             castOrCrewMember.movies.remove(at: index)
