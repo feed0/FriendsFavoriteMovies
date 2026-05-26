@@ -30,6 +30,8 @@ struct CastOrCrewMemberDetail: View {
     
     @State private var showMoviePicker: Bool = false
     
+    @State var movieParticipationSearchString = ""
+    
     // MARK: Computed properties
     
     var navigationTitle: String {
@@ -43,9 +45,10 @@ struct CastOrCrewMemberDetail: View {
             castOrCrewMemberNameTextField
             castOrCrewMemberRoleTextField
             
-            Section("Movies participated in"){
+            Section("Movies participated in") {
                 MoviesParticipatedInList(
                     castOrCrewMember: castOrCrewMember,
+                    titleFilter: movieParticipationSearchString
                 )
             }
         }
@@ -76,6 +79,7 @@ struct CastOrCrewMemberDetail: View {
                 moviePicker
             }
         }
+        .searchable(text: $movieParticipationSearchString)
     }
     
     // MARK: - Subviews
