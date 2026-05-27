@@ -100,12 +100,8 @@ struct CastOrCrewMemberDetail: View {
     }
     
     private var moviePicker: some View {
-        MoviePicker(selectedMember: castOrCrewMember) { movie in
-            if shouldAppendMovie(movie) {
-                castOrCrewMember.movies.append(movie)
-            }
-            
-            showMoviePicker = false
+        MoviePicker(selectedMember: castOrCrewMember) { movies in
+            moviePickerOnSave(movies)
         }
     }
     
@@ -152,6 +148,14 @@ struct CastOrCrewMemberDetail: View {
     }
     
     // MARK: MoviePicker functions
+    
+    private func moviePickerOnSave(_ movies: [Movie]) {
+        for movie in movies {
+            if shouldAppendMovie(movie) {
+                castOrCrewMember.movies.append(movie)
+            }
+        }
+    }
     
     private func shouldAppendMovie(_ movie: Movie) -> Bool {
         !castOrCrewMember.movies.contains(where: { $0 === movie })

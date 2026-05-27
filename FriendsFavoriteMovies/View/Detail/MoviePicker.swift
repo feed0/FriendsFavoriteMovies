@@ -16,10 +16,26 @@ struct MoviePicker: View {
     
     @Query(sort: \Movie.title) private var movies: [Movie]
     @State private var searchString: String = ""
+    @State private var selectedMovies: [Movie]
+    private let currentMovieParticipations: [Movie]
     
     var selectedMember: CastOrCrewMember? = nil
     
-    var onSelect: (Movie) -> Void
+    var onSave: ([Movie]) -> Void
+    
+    // MARK: - Init
+    
+    init(
+        selectedMember: CastOrCrewMember? = nil,
+        onSave: @escaping ([Movie]) -> Void
+    ) {
+        self.selectedMember = selectedMember
+        self.onSave = onSave
+        
+        let initialMovies = selectedMember?.movies ?? []
+        self.currentMovieParticipations = initialMovies
+        _selectedMovies = State(initialValue: initialMovies)
+    }
     
     // MARK: - Body
     
@@ -29,7 +45,7 @@ struct MoviePicker: View {
                 List {
                     ForEach(filteredMovies) { movie in
                         Button {
-                            onSelect(movie)
+                            toggleSelection(for: movie)
                         } label: {
                             HStack {
                                 VStack(alignment: .leading) {
@@ -41,7 +57,9 @@ struct MoviePicker: View {
                                     checkmarkIcon
                                 }
                             }
+                            .foregroundStyle(isMovieInCurrentParticipations(movie) ? .secondary : .primary)
                         }
+                        .disabled(isMovieInCurrentParticipations(movie))
                     }
                 }
             } else {
@@ -59,16 +77,12 @@ struct MoviePicker: View {
             ToolbarItem(placement: .cancellationAction) {
                 cancelButton
             }
+            ToolbarItem(placement: .confirmationAction) {
+                saveButton
+            }
         }
     }
-
-    // MARK: - Helpers
-
-    private func isMovieSelected(_ movie: Movie) -> Bool {
-        guard let member = selectedMember else { return false }
-        return member.movies.contains(where: { $0 === movie })
-    }
-
+    
     // MARK: - Subviews
     
     private func movieTitleText(for movie: Movie) -> some View {
@@ -97,11 +111,42 @@ struct MoviePicker: View {
         }
     }
     
+    private var saveButton: some View {
+        Button("Save") {
+            handleSaveButton()
+        }
+    }
+    
     // MARK: - Functions
+    
+    private func handleSaveButton() {
+        onSave(selectedMovies)
+        dismiss()
+    }
+    
+    private func toggleSelection(for movie: Movie) {
+        guard !isMovieInCurrentParticipations(movie) else { return }
+        
+        if let index = selectedMovies.firstIndex(where: { $0 === movie }) {
+            selectedMovies.remove(at: index)
+        } else {
+            selectedMovies.append(movie)
+        }
+    }
     
     private var filteredMovies: [Movie] {
         guard !searchString.isEmpty else { return movies }
         return movies.filter { $0.title.localizedStandardContains(searchString) }
+    }
+    
+    // MARK: - Helpers
+    
+    private func isMovieSelected(_ movie: Movie) -> Bool {
+        selectedMovies.contains(where: { $0 === movie })
+    }
+    
+    private func isMovieInCurrentParticipations(_ movie: Movie) -> Bool {
+        currentMovieParticipations.contains(where: { $0 === movie })
     }
 }
 
