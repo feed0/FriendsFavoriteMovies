@@ -2,7 +2,7 @@
 //  MovieDetail.swift
 //  FriendsFavoriteMovies
 //
-//  Created by Feed0 on 01/04/26.
+//  Created by feed0 on 01/04/26.
 //
 
 import SwiftUI
@@ -17,6 +17,9 @@ struct MovieDetail: View {
     
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
+    
+    @State private var searchString = ""
+    @State private var showCrewMemberPicker = false
     
     // MARK: Computed properties
     
@@ -51,6 +54,10 @@ struct MovieDetail: View {
             movieTextField
             releaseDatePicker
             
+            Section("Cast & Crew") {
+                movieCrewList
+            }
+            
             if showFavoritedBySection {
                 Section("Favorited by") {
                     List {
@@ -69,12 +76,27 @@ struct MovieDetail: View {
                 ToolbarItem(placement: .confirmationAction) {
                     saveButton
                 }
-                
                 ToolbarItem(placement: .cancellationAction) {
                     cancelButton
                 }
             }
+            
+            ToolbarItem {
+                addNewCrewRelationShipButton
+            }
+            
+            if !isNew {
+                ToolbarItem {
+                    editButton
+                }
+            }
         }
+        .sheet(isPresented: $showCrewMemberPicker) {
+            NavigationStack {
+                crewMemberPicker
+            }
+        }
+        .searchable(text: $searchString)
     }
     
     // MARK: - Subviews
@@ -94,6 +116,19 @@ struct MovieDetail: View {
         )
     }
     
+    private var movieCrewList: some View {
+        MovieCrewList(
+            movie: movie,
+            memberFilter: searchString,
+        )
+    }
+    
+    private func friendNameText(for friend: Friend) -> some View {
+        Text(friend.name)
+    }
+    
+    // MARK: Toolbar buttons
+    
     private var saveButton: some View {
         Button("Save") {
             handleSaveButton()
@@ -106,8 +141,31 @@ struct MovieDetail: View {
         }
     }
     
-    private func friendNameText(for friend: Friend) -> some View {
-        Text(friend.name)
+    private var addNewCrewRelationShipButton: some View {
+        Button(
+            "Add crew member",
+            systemImage: "person.3.fill"
+        ) {
+            handleAddNewMovieRelationshipButton()
+        }
+    }
+    
+    private var editButton: some View {
+        EditButton()
+    }
+    
+    // MARK: Sheet
+    
+    private var crewMemberPicker: some View {
+        CrewMemberPicker(
+            currentMembers: movie.castAndCrew,
+        ) { selectedMembers in
+            for member in selectedMembers {
+                if !movie.castAndCrew.contains(where: { $0 === member }) {
+                    movie.castAndCrew.append(member)
+                }
+            }
+        }
     }
     
     // MARK: - Private funcs
@@ -123,6 +181,10 @@ struct MovieDetail: View {
         dismiss()
     }
     
+    private func handleAddNewMovieRelationshipButton() {
+        showCrewMemberPicker = true
+    }
+    
     // MARK: other
     
     private func deleteRelationship(indexes: IndexSet) {
@@ -131,6 +193,8 @@ struct MovieDetail: View {
         }
     }
 }
+
+// MARK: - Previews
 
 #Preview {
     NavigationStack {

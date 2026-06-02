@@ -72,6 +72,13 @@ struct MoviesParticipatedInList: View {
         .font(.footnote)
     }
     
+    private var contentUnavailableView: some View {
+        ContentUnavailableView(
+            "Add participations in movies",
+            systemImage: "link.badge.plus"
+        )
+    }
+    
     // MARK: - Functions
     
     private func deleteMoviesCrewRelationship(indexes: IndexSet) {
@@ -81,13 +88,6 @@ struct MoviesParticipatedInList: View {
                 castOrCrewMember.movies.remove(at: movieIndex)
             }
         }
-    }
-    
-    private var contentUnavailableView: some View {
-        ContentUnavailableView(
-            "Add participations in movies",
-            systemImage: "link.badge.plus"
-        )
     }
 }
 
