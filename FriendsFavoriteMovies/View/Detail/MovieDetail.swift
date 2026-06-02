@@ -20,21 +20,12 @@ struct MovieDetail: View {
     
     @State private var searchString = ""
     @State private var showCrewMemberPicker = false
+    @State private var showFriendPicker = false
     
     // MARK: Computed properties
     
     private var navigationTitle: String {
         isNew ? "New Movie" : "Movie"
-    }
-    
-    private var showFavoritedBySection: Bool {
-        !movie.favoritedBy.isEmpty
-    }
-    
-    private var sortedFriends: [Friend] {
-        movie.favoritedBy.sorted { first, second in
-            first.name < second.name
-        }
     }
     
     // MARK: - Init
@@ -58,15 +49,8 @@ struct MovieDetail: View {
                 movieCrewList
             }
             
-            if showFavoritedBySection {
-                Section("Favorited by") {
-                    List {
-                        ForEach(sortedFriends) { friend in
-                            friendNameText(for: friend)
-                        }
-                        .onDelete(perform: deleteRelationship(indexes:))
-                    }
-                }
+            Section("Favorited by") {
+                movieFavoritedByList
             }
         }
         .navigationTitle(navigationTitle)
@@ -84,6 +68,10 @@ struct MovieDetail: View {
             ToolbarItem {
                 addNewCrewRelationShipButton
             }
+
+            ToolbarItem {
+                addNewFriendRelationShipButton
+            }
             
             if !isNew {
                 ToolbarItem {
@@ -94,6 +82,11 @@ struct MovieDetail: View {
         .sheet(isPresented: $showCrewMemberPicker) {
             NavigationStack {
                 crewMemberPicker
+            }
+        }
+        .sheet(isPresented: $showFriendPicker) {
+            NavigationStack {
+                friendPicker
             }
         }
         .searchable(text: $searchString)
@@ -122,9 +115,12 @@ struct MovieDetail: View {
             memberFilter: searchString,
         )
     }
-    
-    private func friendNameText(for friend: Friend) -> some View {
-        Text(friend.name)
+
+    private var movieFavoritedByList: some View {
+        MovieFavoritedByList(
+            movie: movie,
+            friendFilter: searchString,
+        )
     }
     
     // MARK: Toolbar buttons
@@ -149,6 +145,15 @@ struct MovieDetail: View {
             handleAddNewMovieRelationshipButton()
         }
     }
+
+    private var addNewFriendRelationShipButton: some View {
+        Button(
+            "Add friend",
+            systemImage: "person.fill.badge.plus"
+        ) {
+            handleAddNewFriendRelationshipButton()
+        }
+    }
     
     private var editButton: some View {
         EditButton()
@@ -163,6 +168,18 @@ struct MovieDetail: View {
             for member in selectedMembers {
                 if !movie.castAndCrew.contains(where: { $0 === member }) {
                     movie.castAndCrew.append(member)
+                }
+            }
+        }
+    }
+
+    private var friendPicker: some View {
+        FriendPicker(
+            currentFavorites: movie.favoritedBy,
+        ) { selectedFriends in
+            for friend in selectedFriends {
+                if !movie.favoritedBy.contains(where: { $0 === friend }) {
+                    movie.favoritedBy.append(friend)
                 }
             }
         }
@@ -184,13 +201,9 @@ struct MovieDetail: View {
     private func handleAddNewMovieRelationshipButton() {
         showCrewMemberPicker = true
     }
-    
-    // MARK: other
-    
-    private func deleteRelationship(indexes: IndexSet) {
-        for index in indexes {
-            movie.favoritedBy.remove(at: index)
-        }
+
+    private func handleAddNewFriendRelationshipButton() {
+        showFriendPicker = true
     }
 }
 
