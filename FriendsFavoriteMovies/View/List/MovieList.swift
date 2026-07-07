@@ -21,12 +21,15 @@ struct MovieList: View {
     // MARK: - Init
     
     init(
-        titleFilter: String = "",
+        filteredValue: String = "",
         sortBy: SortDescriptor<Movie> = SortDescriptor<Movie>(\Movie.title)
     ) {
         let predicate = #Predicate<Movie> { movie in
-            titleFilter.isEmpty
-            || movie.title.localizedStandardContains(titleFilter)
+            filteredValue.isEmpty
+            || movie.title.localizedStandardContains(filteredValue)
+            || movie.castAndCrew.contains { member in
+                member.name.localizedStandardContains(filteredValue)
+            }
         }
         
         _movies = Query(
@@ -145,7 +148,7 @@ struct MovieList: View {
 
 #Preview("Filtered by text") {
     NavigationStack {
-        MovieList(titleFilter: "tr")
+        MovieList(filteredValue: "tr")
             .modelContainer(SampleData.shared.modelContainer)
     }
 }

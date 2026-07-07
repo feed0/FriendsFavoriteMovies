@@ -50,7 +50,7 @@ struct FilteredMovieList: View {
     
     private var searchableMovieList: some View {
         MovieList(
-            titleFilter: searchString,
+            filteredValue: searchString,
             sortBy: sortDescriptor,
         )
         .searchable(text: $searchString)
