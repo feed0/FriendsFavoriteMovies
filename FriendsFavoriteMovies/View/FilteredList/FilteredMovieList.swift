@@ -15,7 +15,7 @@ struct FilteredMovieList: View {
     @State private var searchString: String = ""
     @State private var sortToggleByDate: Bool = false
     
-    // MARK: Compute properties
+    // MARK: Computed properties
     
     private var sortDescriptor: SortDescriptor<Movie> {
         if sortToggleByDate {
@@ -50,7 +50,7 @@ struct FilteredMovieList: View {
     
     private var searchableMovieList: some View {
         MovieList(
-            titleFilter: searchString,
+            filteredValue: searchString,
             sortBy: sortDescriptor,
         )
         .searchable(text: $searchString)
